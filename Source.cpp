@@ -11,14 +11,15 @@ void hovedMeny();
 void gjentager(char symbol, int lengde);
 
 //					OBJEKT
-Lege* leger[MAXLEGR];
+List* Leger;
 
-// 
-int antLeger;
 
 //					MAIN
 int main() {
-	antLeger = 0;
+	Leger = new List(Sorted);
+
+	Resept* temp;
+	char* tempLegeNavn = nullptr;
 
 	char kommando;
 
@@ -28,24 +29,26 @@ int main() {
 		kommando = les("\nMenyvalg: ");
 		switch (kommando) {
 		case 'R': 
-			
-			char* tempLegeNavn;
-			//Bekreft valgt kommando
+			int Id;
+			Lege* reseptGiver;
+
 			cout << endl;
 			gjentager('-', 19); cout << " NY RESEPT "; gjentager('-', 19);
-			//	lag en ny resept
-			Resept* temp = new Resept; 
-		
+			Id = lesDato();
+			temp = new Resept(Id);
 
-			//	Be om dato(i format ÅÅÅÅMMDD i interval 2015 - 2025, 01 - 12, 0 - 31) //lesfunk*
-			//	Be om pasientens navn(kanskje sjekke om den har "x y")
 			//	Be om Legens navn
 			les("\nReseptgiver (navn): ", tempLegeNavn);
-			for (int i = 0; i < antLeger; i++) {
-				leger[i]->inList(tempLegeNavn);
-			}
-			//	if (eksisterer) { (sett objekt inn i lege objekt og sorter)*funk ? }
-			//	else { ny lege(-|| -)*funk ? }
+			
+			reseptGiver = (Lege*)Leger->remove(tempLegeNavn);
+
+			if (reseptGiver) { reseptGiver->addResept(temp); }
+
+			else { reseptGiver = new Lege(tempLegeNavn); 
+				   reseptGiver->addResept(temp);}
+
+			Leger->add(reseptGiver);
+			
 			//	Be om medisinens navn(Det er ialt ca. 50 forskjellige narkotiske stoffer ? )
 			//		Be om dosering i milligram(intervall 1 - 1000)
 			

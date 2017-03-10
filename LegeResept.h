@@ -6,18 +6,27 @@
 
 //		GLOBALE VARIABLER
 const int MAXTXT = 80;
-const int MAXRSPT = 50;
 const int MAXLEGR = 100;
 
+//		LESFUNKSJONER
+void les(char* skriv, char*& input);
+char les(char* skriv);
+int  les(char* skriv, int min, int max);
+int  lesDato();
+
 //		KLASSER
-class Resept : NumElement  {
+class Resept : public NumElement  {
 private:
 	char* pasientNavn;
 	char* medisinNavn;
 	int dosering;
 public:
 	Resept() {
-		number = lesDato();
+		cout << "\n\nResept må ha int parameter!\n";
+	}
+
+	Resept(int id) : NumElement(id) {
+		cin.ignore();
 		les("\nPasientnavn: ", pasientNavn);
 		// spør om legenavn
 		// hvis finnes legg resept i liste
@@ -27,19 +36,30 @@ public:
 	}
 };
 
-class Lege : TextElement {
+class Lege : public TextElement {
 private:
-	Resept* resepter[MAXRSPT];
-	char* navn;
+	List* resepter;
 	char* adresse;
 	int telefon;
-	int antResepter;
+public:
+	Lege() {
+		cout << "\n\nFeil tilkalling av et Legeobjekt\n";
+	}
+
+	Lege(char* lNavn) : TextElement(lNavn){
+		les("\nAdresse: ", adresse);
+		telefon = ("\nTelefonnummer: ", 10000000, 99999999);
+	}
+
+	void addResept(Resept* ny) {
+		resepter->add(ny);
+	}
 };
 
 //		LESFUNKSJONER
 
 // Les inn pointer tekst
-void les(char* skriv, char* input) {
+void les(char* skriv, char*& input) {
 	char temp[MAXTXT];
 	cout << skriv;
 	cin.getline(temp, MAXTXT);
@@ -58,9 +78,9 @@ char les(char* skriv) {
 int les(char* skriv, int min, int max) {
 	int temp;
 	do {
-		cout << "\n\t" << min << " til " << max << endl;
-		cout << skriv; cin >> temp;
-	} while (temp < min && temp > max);
+		cout << "\n\t" << min << " til " << max;
+		cout << "\n\t" << skriv; cin >> temp;
+	} while (temp < min || temp > max);
 
 	return temp;
 }
